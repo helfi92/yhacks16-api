@@ -11,6 +11,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var twitter = require('./routes/twitter');
 var questions = require('./routes/questions');
+var nasdaq = require('./routes/nasdaq');
 
 var app = express();
 app.use(cors());
@@ -31,6 +32,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/twitter', twitter);
 app.use('/questions', questions);
+app.use('/nasdaq', nasdaq);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
