@@ -1,36 +1,31 @@
 var express = require('express');
 var router = express.Router();
-//var db = require('../models/db');
+var Question = require('../models/Question');
 
-//db.then(function(connection) {
-//   var questionsCollection = connection.collection('questionscollection');
-//
-//
-//   // GET list of questions
-//   router.get('/', function(req, res, next) {
-//     questionsCollection.find().toArray(function(err, result) {
-//       if (err) {
-//         console.log('err: ', err);
-//       }
-//
-//       res.send(result);
-//     });
-//   });
-//
-//   // POST a question
-//   router.post('/', function(req, res, next) {
-//     var q = { question: req.body.question, answer: req.body.answer };
-//
-//     if(q.question && q.answer) {
-//       questionsCollection.insertOne(q, function (err, data) {
-//         if (err) {
-//           throw err;
-//         }
-//
-//         res.json(data);
-//       });
-//     }
-//   });
-//});
+  // GET list of questions
+  router.get('/', function(req, res, next) {
+    Question.find({}, function (err, docs) {
+      if (err) {
+        res.json( {successs: false });
+      }
+
+      res.json(docs);
+    });
+  });
+
+  // POST a question
+  router.post('/', function(req, res, next) {
+    var q = { question: req.body.question, answer: req.body.answer, wrongAnswers: req.body.wrongAnswers };
+
+    if(q.question && q.answer && q.wrongAnswers) {
+      Question.create({ question: q.question, answer: q.answer, wrongAnswers: q.wrongAnswers }, function (err, doc) {
+        if (err) {
+          res.send({ success: false });
+        }
+
+        res.send(doc);
+      });
+    }
+  });
 
 module.exports = router;
