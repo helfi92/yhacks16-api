@@ -13,6 +13,7 @@ var client = new Twitter({
 
 
 
+
 /* GET twitter stock tick feed.
 *  Example: http://localhost:3000/twitter?q=MSFT
 * */
