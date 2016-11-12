@@ -27,7 +27,7 @@ db.then(function(connection) {
         }
 
         res.json(data);
-      })
+      });
     }
   });
 });
