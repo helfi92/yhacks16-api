@@ -2,11 +2,13 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-// create a schema
+/*
+  Answer is located at choices[answer]
+ */
 var questionSchema = new Schema({
   question: { type: String, required: true, unique: true },
-  answer: { type: String, required: true },
-  wrongAnswers: [],
+  answer: { type: Number, required: true },
+  choices: [],
   created_at: Date,
   updated_at: Date
 });

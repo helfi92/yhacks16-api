@@ -12,12 +12,13 @@ router.get('/', function(req, res, next) {
 // Login
 router.post('/login', function(req, res, next) {
   var password = req.body.password;
+  var username = req.body.username;
 
   User.findOne({ username : username, password: password }, function (err, user) {
     if (err) {
       throw err;
     }
-
+    req.session.user = user.username;
     res.json(user);
   });
 });
@@ -43,9 +44,18 @@ router.post('/signup', function (req, res, next) {
   });
 });
 
+router.get('/logout', function (req, res, next) {
+  req.session.user = null;
+  res.json({ success: true });
+});
+
 // Update User stocks
 // req.body.update { _id, update }
 router.put('/updateStocks', function (req, res, next) {
+  if (!req.session.user) {
+    res.json({ success: false })
+  }
+
   User.findOne({ _id: req.body._id }, function (err, user) {
     if (err) {
       throw err;

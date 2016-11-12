@@ -4,6 +4,10 @@ var Question = require('../models/Question');
 
   // GET list of questions
   router.get('/', function(req, res, next) {
+    if (!req.session.user) {
+      res.json({ success: false })
+    }
+
     Question.find({}, function (err, docs) {
       if (err) {
         res.json( {successs: false });
