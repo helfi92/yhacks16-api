@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/yhacks2016');
+var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/yhacks2016';
+mongoose.connect(mongoUri);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
