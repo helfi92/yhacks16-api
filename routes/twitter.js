@@ -11,9 +11,6 @@ var client = new Twitter({
   accessTokenSecret: 'ghYuEx8gLF06XuaH6vp6sDFTiP1oJ6sP1otRGQbjy2BFc'
 });
 
-
-
-
 /* GET twitter stock tick feed.
 *  Example: http://localhost:3000/twitter?q=MSFT
 * */
