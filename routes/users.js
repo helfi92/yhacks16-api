@@ -1,57 +1,76 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../models/db');
+var User = require('../models/User');
 
-db.then(function(connection) {
-  var userCollection = connection.collection('usercollection');
-
-  /* GET users listing. */
-  router.get('/', function(req, res, next) {
-    userCollection.find().toArray(function (err, result) {
-      if (err) {
-        throw err;
-      }
-
-      res.json(result);
-    })
+/* GET users listing. */
+router.get('/', function(req, res, next) {
+  User.find({}, function (err, docs) {
+    res.json(docs);
   });
+});
 
-  // Login
-  router.post('/login', function(req, res, next) {
-    var username = req.body.username;
-    var password = req.body.password;
+// Login
+router.post('/login', function(req, res, next) {
+  var password = req.body.password;
 
-    userCollection.find({ username: username, password: password }).toArray(function(err, result) {
-      if (err) {
-        console.log('err: ', err);
-      }
+  User.findOne({ username : username, password: password }, function (err, user) {
+    if (err) {
+      throw err;
+    }
 
-      res.send(result);
-    });
+    res.json(user);
   });
+});
 
-  // Signup
-  router.post('/signup', function(req, res, next) {
-    var username = req.body.username;
-    var password = req.body.password;
+// Signup
+router.post('/signup', function (req, res, next) {
+  var username = req.body.username;
+  var password = req.body.password;
 
-    // Verify that user is unique / does not exist before signing him up
-    userCollection.find({ username: username }).toArray(function(err, result) {
+
+  User.findOne({ username : username }, function (err, user) {
+    if (err) {
+      res.send({ success: false });
+    }
+
+    User.create({ username: username, password: password }, function (err, doc) {
       if (err) {
-        throw err;
-      }
-
-      if (!result.length) {
-        userCollection.insertOne({ username: username, password: password }, function (err, data) {
-          if (err) {
-            throw err;
-          }
-
-          res.json(data);
-        });
-      } else {
         res.send({ success: false });
       }
+
+      res.send(doc);
+    });
+  });
+});
+
+// Update User stocks
+// req.body.update { _id, update }
+router.put('/updateStocks', function (req, res, next) {
+  User.findOne({ _id: req.body._id }, function (err, user) {
+    if (err) {
+      throw err;
+    }
+
+    var stocks = Array.from(user.stocks);
+    console.log('stocks: ', stocks);
+    var modified = false;
+
+    user.stocks.map(function(stock, index) {
+      if (stock === req.body.stock) {
+        stocks.splice(index, 1);
+        modified = true;
+      }
+    });
+
+    if (!modified) {
+      stocks.push(req.body.stock);
+    }
+
+    User.update(user, { stocks: stocks }, function(err, updatedRes) {
+      if (err) {
+        res.json({ success: false });
+      }
+      res.json(updatedRes);
     });
   });
 });
