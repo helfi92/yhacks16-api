@@ -96,7 +96,7 @@ router.get('/', function(req, res, next) {
       total = total/num_statuses;
       twitter_data.sentiment = total;
       res.set('Content-Type', 'application/json')
-      res.send('(' + JSON.stringify(twitter_data) + ');');
+      res.send(JSON.stringify(twitter_data));
     }, function(reason) {
       console.log(reason);
     });
